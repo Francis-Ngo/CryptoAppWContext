@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import './App.css';
 import Coin from './Coin';
-
+import { CryptoContext } from './CryptoContext';
 
 function App() {
-  const [coins, setCoins] = useState([]);
+  
   const [search, setSearch] = useState('');
-
-  //Function for API using Axios
+  const {coins} = useContext(CryptoContext);
+  // Function for API using Axios
   useEffect(() => {
     axios.get(
         'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h&locale=en'
@@ -20,13 +20,13 @@ function App() {
       .catch(error => console.log(error));
   }, []);
 
-  const handleChange = e => {
-    setSearch(e.target.value);
-  };
+   const handleChange =(e) => {
+     setSearch(e.target.value);
+   };
 
-  const filteredCoins = coins.filter(coin =>
+   const filteredCoins = coins.filter(coin =>
       coin.name.toLowerCase().includes(search.toLowerCase())
-  );
+   );
 
   return (
     <div className='coin-app'>
@@ -40,14 +40,14 @@ function App() {
       {filteredCoins.map((coin) => {
         return (
         <Coin
-          key={coin.id}
-          name={coin.name}
-          price={coin.current_price}
-          image={coin.image}
-          symbol={coin.symbol}
-          volume={coin.market_cap}
-          priceChange={coin.price_change_percentage_24h}
-          marketcap={coin.total_volume}
+           key={coin.id}
+           name={coin.name}
+           price={coin.current_price}
+           symbol={coin.symbol}
+           marketcap={coin.total_volume}
+           volume={coin.market_cap}
+           image={coin.image}
+           priceChange={coin.price_change_percentage_24h}
         />
         );
         })}
